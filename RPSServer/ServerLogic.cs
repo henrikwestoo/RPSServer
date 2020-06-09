@@ -14,12 +14,14 @@ namespace RPSServer
     {
 
         public Form1 gui;
+        public List<Client> Clients;
 
         public ServerLogic(Form1 gui)
         {
 
             this.gui = gui;
             gui.AppendText("hej");
+            Clients = new List<Client>();
 
         }
 
@@ -32,52 +34,45 @@ namespace RPSServer
         public void Run()
         {
 
-            // Establish the local endpoint  
-            // for the socket. Dns.GetHostName 
-            // returns the name of the host  
-            // running the application. 
             IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
             IPAddress ipAddr = ipHost.AddressList[1];
-            IPEndPoint localEndPoint = new IPEndPoint(ipAddr, 4004);
 
-            // Creation TCP/IP Socket using  
-            // Socket Class Costructor 
-            Socket listener = new Socket(ipAddr.AddressFamily,
-                         SocketType.Stream, ProtocolType.Tcp);
+            bool done = false;
+            var listener = new TcpListener(ipAddr, 4004);
+            listener.Start();
+
+            int counter = 0;
+
+            while (!done) {
+
+                counter++;
+
+                gui.Invoke((MethodInvoker)delegate { gui.AppendText("Listening..."); });
+                TcpClient tcpClient = listener.AcceptTcpClient();
+                gui.Invoke((MethodInvoker)delegate { gui.AppendText("Connection found!"); });
+                
+                
+                Client client = new Client(tcpClient);
+                Clients.Add(client);
+                gui.Invoke((MethodInvoker)delegate { gui.AppendText("There are "+counter+" clients connected"); });
+
+                MessageAllClients("this is a message from the server");
+
+            }
 
             try
-            {
-
-                // Using Bind() method we associate a 
-                // network address to the Server Socket 
-                // All client that will connect to this  
-                // Server Socket must know this network 
-                // Address 
-                listener.Bind(localEndPoint);
-
-                // Using Listen() method we create  
-                // the Client list that will want 
-                // to connect to Server 
-                listener.Listen(100);
-
-                while (true)
-                {
-
-                    gui.Invoke((MethodInvoker)delegate { gui.AppendText("Listening..."); });
-
-                    // Suspend while waiting for 
-                    // incoming connection Using  
-                    // Accept() method the server  
-                    // will accept connection of client 
-                    Socket clientSocket = listener.Accept();
-                    gui.Invoke((MethodInvoker)delegate { gui.AppendText("Connection found!"); });
-
-                }
-            }
+            {}
             catch (Exception e) {}
 
+        }
 
+        public void MessageAllClients(string message) {
 
+            foreach (var client in Clients)
+            {
+                client.SendMessage(message);
+            }
+        
         }
 
     }
