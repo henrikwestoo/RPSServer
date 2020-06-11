@@ -15,6 +15,7 @@ namespace RPSServer
 
         public Form1 gui;
         public List<Client> Clients;
+        public List<Match> Matches;
 
         public ServerLogic(Form1 gui)
         {
@@ -22,6 +23,7 @@ namespace RPSServer
             this.gui = gui;
             gui.AppendText("hej");
             Clients = new List<Client>();
+            Matches = new List<Match>();
 
         }
 
@@ -37,32 +39,39 @@ namespace RPSServer
             IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
             IPAddress ipAddr = ipHost.AddressList[1];
 
-            bool done = false;
             var listener = new TcpListener(ipAddr, 4004);
             listener.Start();
 
-            int counter = 0;
+            int clientAlias = 1;
 
-            while (!done) {
+            int matchId = 1;
+            Match match = new Match(matchId);
+            Matches.Add(match);
 
-                counter++;
+            while (true) {
 
                 gui.Invoke((MethodInvoker)delegate { gui.AppendText("Listening..."); });
                 TcpClient tcpClient = listener.AcceptTcpClient();
                 gui.Invoke((MethodInvoker)delegate { gui.AppendText("Connection found!"); });
                 
                 
-                Client client = new Client(tcpClient);
+                Client client = new Client(tcpClient, clientAlias);
+                clientAlias++;
                 Clients.Add(client);
-                gui.Invoke((MethodInvoker)delegate { gui.AppendText("There are "+counter+" clients connected"); });
+                gui.Invoke((MethodInvoker)delegate { gui.AppendText("There are "+Clients.Count()+" clients connected"); });
 
-                MessageAllClients("this is a message from the server");
+                //om matchen inte är full försöker vi fylla den med spelare
+                if (!match.IsFull()) { match.AddPlayer(client); }
+
+                //annars skapar vi en ny match
+                else { matchId++; match = new Match(matchId); 
+                    Matches.Add(match);
+                    //och lägger till spelaren i den
+                    match.AddPlayer(client); }
+
+                MessageAllClients("A new match was created");
 
             }
-
-            try
-            {}
-            catch (Exception e) {}
 
         }
 
@@ -70,7 +79,7 @@ namespace RPSServer
 
             foreach (var client in Clients)
             {
-                client.SendMessage(message);
+                client.SendMessageToClient(message);
             }
         
         }
