@@ -17,9 +17,10 @@ namespace RPSServer
 
         public enum Move
         {
-            Rock = 1,
-            Paper = 2,
-            Scissors = 3
+            None,
+            Rock,
+            Paper,
+            Scissors
         }
 
 
@@ -62,18 +63,18 @@ namespace RPSServer
                     switch (message) {
 
                         //rock
-                        case "0":
-                            CurrentMove = (Move)0;
-                            break;
-                        
-                        //paper
                         case "1":
                             CurrentMove = (Move)1;
                             break;
-
-                        //scissors
+                        
+                        //paper
                         case "2":
                             CurrentMove = (Move)2;
+                            break;
+
+                        //scissors
+                        case "3":
+                            CurrentMove = (Move)3;
                             break;
 
                     }

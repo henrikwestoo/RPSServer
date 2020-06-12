@@ -42,7 +42,6 @@ namespace RPSServer
             counter++;
             serverLogic.MessageAllClients("\ntest-message from server " + counter);
 
-
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -54,12 +53,12 @@ namespace RPSServer
                     AppendText("MatchID: " + match.MatchId + ":");
 
                     if (match.Player1 != null)
-                    {AppendText("Player1: " + match.Player1.Alias);}
+                    {AppendText("Player1: " + match.Player1.Alias + ". Move: " + match.Player1.CurrentMove.ToString());}
 
                     else { AppendText("Player1: " + "Not connected"); }
 
                     if (match.Player2 != null)
-                    {AppendText("Player2: " + match.Player2.Alias);}
+                    { AppendText("Player2: " + match.Player2.Alias + ". Move: " + match.Player2.CurrentMove.ToString()); }
 
                     else { AppendText("Player2: " + "Not connected"); }
                 }
