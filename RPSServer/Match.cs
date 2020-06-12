@@ -12,10 +12,10 @@ namespace RPSServer
         public Client Player1 { get; set; }
         public Client Player2 { get; set; }
         public int MatchId { get; set; }
+        public bool Running { get; set; }
 
         public Match(int matchId)
         {
-
             this.MatchId = matchId;
         }
 
@@ -42,7 +42,9 @@ namespace RPSServer
             }
 
             else if (Player2 == null)
-            { Player2 = player; }
+            { Player2 = player;
+                Running = true;
+            }
 
         }
 
