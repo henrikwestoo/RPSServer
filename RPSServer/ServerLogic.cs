@@ -39,6 +39,7 @@ namespace RPSServer
             IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
             IPAddress ipAddr = ipHost.AddressList[1];
 
+            //som en serversocket
             var listener = new TcpListener(ipAddr, 4004);
             listener.Start();
 
