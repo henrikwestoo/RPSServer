@@ -62,15 +62,23 @@ namespace RPSServer
                 gui.Invoke((MethodInvoker)delegate { gui.AppendText("There are "+Clients.Count()+" clients connected"); });
 
                 //om matchen inte är full försöker vi fylla den med spelare
-                if (!match.IsFull()) { match.AddPlayer(client); }
+                if (!match.IsFull()) 
+                { 
+                    match.AddPlayer(client);
+                    //om matchen nu är full så kan matchen börja
+                    if (match.IsFull()) {
+
+                        match.Player1.SendMessageToClient("matchfound");
+                        match.Player2.SendMessageToClient("matchfound");
+                    
+                    }
+                }
 
                 //annars skapar vi en ny match
                 else { matchId++; match = new Match(matchId); 
                     Matches.Add(match);
                     //och lägger till spelaren i den
                     match.AddPlayer(client); }
-
-                MessageAllClients("A new match was created");
 
             }
 
