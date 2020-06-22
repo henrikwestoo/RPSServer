@@ -21,7 +21,6 @@ namespace RPSServer
         {
 
             this.gui = gui;
-            gui.AppendText("hej");
             Clients = new List<Client>();
             Matches = new List<Match>();
 
@@ -65,6 +64,7 @@ namespace RPSServer
                 if (!match.IsFull()) 
                 { 
                     match.AddPlayer(client);
+
                     //om matchen nu är full så kan matchen börja
                     if (match.IsFull()) {
 

@@ -8,6 +8,15 @@ using System.Threading.Tasks;
 
 namespace RPSServer
 {
+    public enum Move
+    {
+        None,
+        Rock,
+        Paper,
+        Scissors
+    }
+
+
     public class Client
     {
         public TcpClient TcpClient { get; set; }
@@ -15,17 +24,14 @@ namespace RPSServer
         public int Alias { get; set; }
         public Move CurrentMove { get; set; }
 
-        public enum Move
+        public int Points { get; set; }
+
+        public Match CurrentMatch { get; set; }
+
+
+
+        public Client(TcpClient tcpClient, int alias)
         {
-            None,
-            Rock,
-            Paper,
-            Scissors
-        }
-
-
-
-        public Client(TcpClient tcpClient, int alias) {
 
             Alias = alias;
             TcpClient = tcpClient;
@@ -51,40 +57,39 @@ namespace RPSServer
         {
 
             //lyssna efter meddelanden
-            while (true) {
+            while (true)
+            {
 
-                while (true)
+                byte[] bytes = new byte[1024];
+                int bytesRead = NetworkStream.Read(bytes, 0, bytes.Length);
+
+                string message = Encoding.ASCII.GetString(bytes, 0, bytesRead);
+
+                switch (message)
                 {
-                    byte[] bytes = new byte[1024];
-                    int bytesRead = NetworkStream.Read(bytes, 0, bytes.Length);
 
-                    string message = Encoding.ASCII.GetString(bytes, 0, bytesRead);
+                    //rock
+                    case "1":
+                        CurrentMove = (Move)1;
+                        break;
 
-                    switch (message) {
+                    //paper
+                    case "2":
+                        CurrentMove = (Move)2;
+                        break;
 
-                        //rock
-                        case "1":
-                            CurrentMove = (Move)1;
-                            break;
-                        
-                        //paper
-                        case "2":
-                            CurrentMove = (Move)2;
-                            break;
-
-                        //scissors
-                        case "3":
-                            CurrentMove = (Move)3;
-                            break;
-
-                    }
+                    //scissors
+                    case "3":
+                        CurrentMove = (Move)3;
+                        break;
 
                 }
 
+                CurrentMatch.NotifyPlayMade();
 
             }
-        
-        }
 
         }
+
+    }
 }
