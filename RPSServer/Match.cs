@@ -53,6 +53,7 @@ namespace RPSServer
 
         }
 
+
         public void NotifyPlayMade() {
 
             if (Player1.CurrentMove != 0 && Player2.CurrentMove != 0) {
@@ -82,16 +83,22 @@ namespace RPSServer
 
                 }
 
+                string points = "points-" + Player1.Points.ToString() + "+" + Player2.Points.ToString() + "";
+                Player1.SendMessageToClient(points);
+                Player2.SendMessageToClient(points);
+
                 if(Player1.Points == 3)
                 {
                     Player1.SendMessageToClient("gamewon");
                     Player2.SendMessageToClient("gamelost");
+                    ServerLogic.RemoveMatchFromList(this);
                 }
 
                 else if (Player2.Points == 3)
                 {
                     Player2.SendMessageToClient("gamewon");
                     Player1.SendMessageToClient("gamelost");
+                    ServerLogic.RemoveMatchFromList(this);
                 }
 
                 Player1.CurrentMove = 0;

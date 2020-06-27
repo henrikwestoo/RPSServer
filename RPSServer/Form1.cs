@@ -46,9 +46,9 @@ namespace RPSServer
 
         private void button3_Click(object sender, EventArgs e)
         {
-            if (serverLogic.Matches != null)
+            if (ServerLogic.Matches != null)
             {
-                foreach (var match in serverLogic.Matches)
+                foreach (var match in ServerLogic.Matches)
                 {
                     AppendText("MatchID: " + match.MatchId + ":");
 

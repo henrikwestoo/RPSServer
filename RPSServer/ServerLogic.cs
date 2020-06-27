@@ -14,8 +14,8 @@ namespace RPSServer
     {
 
         public Form1 gui;
-        public List<Client> Clients;
-        public List<Match> Matches;
+        public static List<Client> Clients;
+        public static List<Match> Matches;
 
         public ServerLogic(Form1 gui)
         {
@@ -30,6 +30,14 @@ namespace RPSServer
         {
             Thread newThread = new Thread(new ThreadStart(Run));
             newThread.Start();
+        }
+
+        public static void RemoveMatchFromList(Match match) {
+
+            Matches.Remove(match);
+            Clients.Remove(match.Player1);
+            Clients.Remove(match.Player2);
+        
         }
 
         public void Run()
@@ -90,6 +98,8 @@ namespace RPSServer
             {
                 client.SendMessageToClient(message);
             }
+            //gui.Invoke((MethodInvoker)delegate { gui.AppendText("sent:" + message + " to clients"); });
+            
         
         }
 
