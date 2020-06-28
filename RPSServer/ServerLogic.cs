@@ -16,6 +16,7 @@ namespace RPSServer
         public Form1 gui;
         public static List<Client> Clients;
         public static List<Match> Matches;
+        public bool Running { get; set; }
 
         public ServerLogic(Form1 gui)
         {
@@ -28,8 +29,11 @@ namespace RPSServer
 
         public void StartServer()
         {
-            Thread newThread = new Thread(new ThreadStart(Run));
-            newThread.Start();
+            if (!Running)
+            {
+                Thread newThread = new Thread(new ThreadStart(Run));
+                newThread.Start();
+            }
         }
 
         public static void RemoveMatchFromList(Match match) {
@@ -49,6 +53,8 @@ namespace RPSServer
             //som en serversocket
             var listener = new TcpListener(ipAddr, 4004);
             listener.Start();
+
+            Running = true;
 
             int clientAlias = 1;
 

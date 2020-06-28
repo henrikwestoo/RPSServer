@@ -83,18 +83,19 @@ namespace RPSServer
 
                 }
 
-                string points = "points-" + Player1.Points.ToString() + "+" + Player2.Points.ToString() + "";
-                Player1.SendMessageToClient(points);
-                Player2.SendMessageToClient(points);
+                string points1 = "points-" + Player1.Points.ToString() + "+" + Player2.Points.ToString() + "";
+                string points2 = "points-" + Player2.Points.ToString() + "+" + Player1.Points.ToString() + "";
+                Player1.SendMessageToClient(points1);
+                Player2.SendMessageToClient(points2);
 
-                if(Player1.Points == 3)
+                if(Player1.Points > 2)
                 {
                     Player1.SendMessageToClient("gamewon");
                     Player2.SendMessageToClient("gamelost");
                     ServerLogic.RemoveMatchFromList(this);
                 }
 
-                else if (Player2.Points == 3)
+                else if (Player2.Points > 2)
                 {
                     Player2.SendMessageToClient("gamewon");
                     Player1.SendMessageToClient("gamelost");
